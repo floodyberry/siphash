@@ -19,7 +19,7 @@ siphash(unsigned char key[16], const unsigned char *m, size_t len) {
 	xmmi k;
 	xmmi v02,v20,v13,v11,v33;
 	xmmi mi;
-	uint64_t MM16 res[2];
+	packedelem64 res;
 	unsigned char buf[8];
 	size_t i;
 
@@ -71,7 +71,6 @@ sip7bytesorless:
 	sipcompress()
 
 	v02 = _mm_xor_si128(v02, v13);
-	v02 = _mm_xor_si128(v02, _mm_shuffle_epi32(v02, _MM_SHUFFLE(1,0,3,2)));
-	_mm_store_si128((xmmi *)res, v02);
-	return res[0];
+	res.v = _mm_xor_si128(v02, _mm_shuffle_epi32(v02, _MM_SHUFFLE(1,0,3,2)));
+	return res.u[0];
 }
