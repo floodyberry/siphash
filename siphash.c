@@ -16,8 +16,8 @@ uint64_t
 siphash(unsigned char key[16], const unsigned char *m, size_t len) {
 	uint64_t v0, v1, v2, v3;
 	uint64_t mi, k0, k1;
-	unsigned char buf[8];
-	size_t i;
+	uint64_t last7;
+	size_t i, blocks;
 
 	k0 = U8TO64_LE(key + 0);
 	k1 = U8TO64_LE(key + 8);
@@ -26,8 +26,7 @@ siphash(unsigned char key[16], const unsigned char *m, size_t len) {
 	v2 = k0 ^ 0x6c7967656e657261ull;
 	v3 = k1 ^ 0x7465646279746573ull;
 
-	buf[7] = (unsigned char)len;
-	if (len < 8) goto sip7bytesorless;
+	last7 = (uint64_t)(len & 0xff) << 56;
 
 #define sipcompress() \
 	v0 += v1; v2 += v3; \
@@ -39,24 +38,29 @@ siphash(unsigned char key[16], const unsigned char *m, size_t len) {
 	v1 ^= v2; v3 ^= v0; \
 	v2 = ROTL64(v2,32);
 
-siploop:
-	mi = U8TO64_LE(m);
-	v3 ^= mi;
-	sipcompress()
-	sipcompress()
-	v0 ^= mi;
-	m += 8;
-	len -= 8;
-	if (len >= 8) goto siploop;
+	for (i = 0, blocks = (len & ~7); i < blocks; i += 8) {
+		mi = U8TO64_LE(m + i);
+		v3 ^= mi;
+		sipcompress()
+		sipcompress()
+		v0 ^= mi;
+	}
 
-sip7bytesorless:
-	for (i = 0; i < len; i++) buf[i] = m[i];
-	for (; i < 7; i++) buf[i] = 0;
-	mi = U8TO64_LE(buf);
-	v3 ^= mi;
+	switch (len - blocks) {
+		case 7: last7 |= (uint64_t)m[i + 6] << 48;
+		case 6: last7 |= (uint64_t)m[i + 5] << 40;
+		case 5: last7 |= (uint64_t)m[i + 4] << 32;
+		case 4: last7 |= (uint64_t)m[i + 3] << 24;
+		case 3: last7 |= (uint64_t)m[i + 2] << 16;
+		case 2: last7 |= (uint64_t)m[i + 1] <<  8;
+		case 1: last7 |= (uint64_t)m[i + 0]      ;
+		case 0:
+		default:;
+	};
+	v3 ^= last7;
 	sipcompress()
 	sipcompress()
-	v0 ^= mi;
+	v0 ^= last7;
 	v2 ^= 0xff;
 	sipcompress()
 	sipcompress()
