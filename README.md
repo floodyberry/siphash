@@ -15,3 +15,6 @@ Performance on an E5200
 </tbody>
 </table>
 
+#### License
+
+Public Domain
