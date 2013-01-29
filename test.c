@@ -58,8 +58,8 @@ int main() {
 
 	for (len = 1; len < 1024; len++) {
 		sum = 1000000000000000ull;
-		t = get_ticks();
 		for (j = 0; j < outer_reps; j++) {
+			t = get_ticks();
 			for (i = 0; i < inner_reps; i++)
 				key[0] += (unsigned char)siphash(key, msg, len);
 			tempsum = (get_ticks() - t);
