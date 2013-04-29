@@ -1,6 +1,8 @@
 #ifndef SIPHASH_IMPL_H
 #define SIPHASH_IMPL_H
 
+#include "siphash.h"
+
 #if defined(_MSC_VER)
 	#include <intrin.h>
 
@@ -10,7 +12,6 @@
 	#define MM16 __declspec(align(16))
 
 	typedef unsigned int uint32_t;
-	typedef unsigned __int64 uint64_t;
 	
 	#if (_MSC_VER >= 1500)
 		#define __SSSE3__
@@ -19,9 +20,6 @@
 		#define __SSE2__
 	#endif
 #else
-	#include <stdint.h>
-	#include <stdlib.h>
-
 	#define INLINE __attribute__((always_inline))
 	#define NOINLINE __attribute__((noinline))
 	#define ROTL64(a,b) (((a)<<(b))|((a)>>(64-b)))
