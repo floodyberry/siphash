@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "siphash.h"
+#include "siphash_impl.h"
 
 #if defined(_MSC_VER)
 	static uint64_t INLINE

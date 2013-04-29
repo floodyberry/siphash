@@ -1,4 +1,6 @@
+#include "siphash.h"
 #include "siphash_impl.h"
+
 
 static uint64_t INLINE
 U8TO64_LE(const unsigned char *p) {
