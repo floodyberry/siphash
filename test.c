@@ -57,7 +57,7 @@ int main() {
 	for (i = 0; i < 500000; i++)
 		key[0] += (unsigned char)siphash(key, msg, 1024);
 
-	for (len = 1; len < 1024; len++) {
+	for (len = 1; len <= 1024; len++) {
 		sum = 1000000000000000ull;
 		for (j = 0; j < outer_reps; j++) {
 			t = get_ticks();
