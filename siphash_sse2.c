@@ -11,7 +11,7 @@ static const packedelem64 siphash_final = {
 };
 
 uint64_t
-siphash(unsigned char key[16], const unsigned char *m, size_t len) {
+siphash(const unsigned char key[16], const unsigned char *m, size_t len) {
 	xmmi k,v02,v20,v13,v11,v33,mi;
 	uint64_t last7;
 	uint32_t lo, hi;
