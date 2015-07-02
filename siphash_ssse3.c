@@ -44,7 +44,6 @@ siphash(const unsigned char key[16], const unsigned char *m, size_t len) {
 	v20 = _mm_add_epi64(v20, v13); \
 	v33 = _mm_or_si128(_mm_slli_epi64(v33, 21), _mm_srli_epi64(v33, 64-21)); \
 	v13 = _mm_unpacklo_epi64(v11, v33); \
-	v13 = _mm_unpacklo_epi64(v11, v33); \
 	v02 = _mm_shuffle_epi32(v20, _MM_SHUFFLE(0,1,3,2)); \
 	v13 = _mm_xor_si128(v13, v20);
 
